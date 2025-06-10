@@ -9,7 +9,14 @@ const registerValidator= ()=>{
         ]
 }
 
+const loginValidator= ()=>{
+    return [
+        body("email").isEmail().withMessage("Email is required"),
+        body("password").isLength({min:6}).withMessage("Password must be at least 6 characters long")
+        ]
+}
 
 export {
-        registerValidator   
+        registerValidator  ,
+        loginValidator 
     }
