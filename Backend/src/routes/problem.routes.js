@@ -5,7 +5,6 @@ import {createProblem,deleteProblem,getAllProblems, getAllSolvedProblemsByUser, 
 const router  = Router();
 
 router.route("/create-problem").post(authMiddleware,checkAdmin,createProblem);
-
 router.route("/").get(authMiddleware,getAllProblems);
 router.route("/get-problem/:id").get(authMiddleware,getProblemById);
 router.route("/update-problem/:id").put(authMiddleware,checkAdmin,updateProblem);
