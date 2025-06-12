@@ -38,7 +38,9 @@ const createProblem = asyncHandler(async(req,res,next)=>{
             for(let i = 0;i<results.length;i++){
                 const result = results[i];
 
-                if(result.status_id !== 3){
+                console.log("Result : ",result)
+
+                if(result.status.id !== 3){
                     return next(new ApiError(400,`Testcase ${i+1} failed for language ${language}`));
                 }
             }
@@ -60,11 +62,8 @@ const createProblem = asyncHandler(async(req,res,next)=>{
 
         }
     } catch (error) {
-        
+        return next(new ApiError(500,error,"error while creating the problem."))
     }
-
-
-
 })
 
 const getAllProblems = asyncHandler(async(req,res,next)=>{
