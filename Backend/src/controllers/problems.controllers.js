@@ -67,15 +67,41 @@ const createProblem = asyncHandler(async(req,res,next)=>{
 })
 
 const getAllProblems = asyncHandler(async(req,res,next)=>{
+    try {
+        const problems = await db.problem.findMany();
+        if(!problems){
+            return next(new ApiError(500,"Problem is not able to fetch from the database."))
+        }
 
+        return res.status(200).json(new ApiResponse(201,problems,"Problems are fetched successfully."))
+
+    } catch (error) {
+        return next(new ApiError(500,error,"error while featching the problems."));
+    }
 })
 
 const getProblemById = asyncHandler(async(req,res,next)=>{
+    const {id} = req.params;
+    try {
+        const problem = await db.problem.findUnique({
+            where:{
+                id
+            }
+        })
+        
+        if(!problem){
+            return next(new ApiError(404,"Problem is not found."))
+        }
 
+        return res.status(200).json(new ApiResponse(200,problem,"Problem is fetched successfully."));
+
+    } catch (error) {
+        return next(new ApiError(500,error,"error while featching the problem."))
+    }
 })
 
 const updateProblem = asyncHandler(async(req,res,next)=>{ 
-
+    
 });
 
 const deleteProblem = asyncHandler(async(req,res,next)=>{ 
