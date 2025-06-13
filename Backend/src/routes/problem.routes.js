@@ -9,7 +9,7 @@ router.route("/").get(authMiddleware,getAllProblems);
 router.route("/get-problem/:id").get(authMiddleware,getProblemById);
 router.route("/update-problem/:id").put(authMiddleware,checkAdmin,updateProblem);
 router.route("/delete-problem/:id").delete(authMiddleware,checkAdmin,deleteProblem);
-router.route("get-solved-problems").get(authMiddleware,getAllSolvedProblemsByUser);
+router.route("/get-solved-problems").get(authMiddleware,getAllSolvedProblemsByUser);
 
 
 

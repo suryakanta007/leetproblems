@@ -171,7 +171,28 @@ const updateProblem = asyncHandler(async (req, res, next) => {
 });
 
 const deleteProblem = asyncHandler(async (req, res, next) => {
-
+    const {id} = req.params;
+    try {
+        const isProblemExsit = await db.problem.findUnique({
+            where:{
+                id
+            }
+        })
+        if(!isProblemExsit){
+            return next(new ApiError(404,"Problem is Exsit."))
+        }
+        const deleteProblem = await db.problem.delete({
+            where:{
+                id
+            }
+        })
+        if(!deleteProblem){
+            return next(new ApiError(500,"Problem is not delete from the database."))
+        }
+        return res.status(200).json(new ApiResponse(200,"Delete the problem is Sucessfully."));
+    } catch (error) {   
+        return next(new ApiError(500,error,"Error while delete the problem."))
+    }
 });
 
 const getAllSolvedProblemsByUser = asyncHandler(async (req, res, next) => {
