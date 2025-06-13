@@ -51,9 +51,9 @@ const createProblem = asyncHandler(async (req, res, next) => {
                 }
             }
 
-            // Save the problem to the database .
+            
         }
-
+        // Save the problem to the database .
         const newProblem = await db.problem.create({
             data: {
                 title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution,
@@ -107,8 +107,8 @@ const getProblemById = asyncHandler(async (req, res, next) => {
 })
 
 const updateProblem = asyncHandler(async (req, res, next) => {
-    const { title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution } = req.body;
     const { id } = req.params;
+    const { title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution } = req.body;
     try {
         const isProblemExsit = await db.problem.findUnique({
             where: {
@@ -154,7 +154,7 @@ const updateProblem = asyncHandler(async (req, res, next) => {
                 id
             },
             data: {
-                title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution,
+                title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution,userId:req.user.id
             }
         })
 
