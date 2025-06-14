@@ -11,6 +11,15 @@ export const getJudge0LanguageId = (language)=>{
     return languageMap[language.toUpperCase()] 
 }   
 
+export const getLanguageName = (languageId)=>{
+    const languageMap = {
+        71:"PYTHON",
+        62:"JAVA",
+        63:"JAVASCRIPT"
+    } 
+
+    return languageMap[languageId].toLowerCase()||"Unknown"
+}
 
 export const submitBatch = async (submissions)=>{
     // const {data} = await axios.post(`${process.env.SULU_API_URL}/submissions/batch?base64_encoded=false`,{
