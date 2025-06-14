@@ -38,6 +38,7 @@ model User {
   // Relation
   problems    Problem[]
   submissions Submission[]
+  solvedProblems ProblemSolved[]
 }
 
 model Problem {
@@ -60,6 +61,7 @@ model Problem {
   //Relationship
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   submissions Submission[]
+  solvedBy ProblemSolved[]
 }
 
 model Submission {
@@ -104,4 +106,19 @@ model TestCaseResult {
   submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 
   @@index([submissionId])
+}
+
+model ProblemSolved {
+  id String @id @default(uuid())
+  userId String
+  problemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationship
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  problem Problem @relation(fields: [problemId],references: [id],onDelete: Cascade)
+
+  @@unique([userId,problemId])
 }
