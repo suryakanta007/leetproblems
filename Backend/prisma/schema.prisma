@@ -72,7 +72,7 @@ model Submission {
   language      String
   stdin         String?
   stdout        String?
-  stderr        String
+  stderr        String?
   compileOutput String?
   status        String
   memory        String?

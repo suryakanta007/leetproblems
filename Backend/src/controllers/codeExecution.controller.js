@@ -77,8 +77,6 @@ const executeCode = asyncHandler(async (req, res, next) => {
             }
         })
 
-        console.log("Submission : ", submission)
-
         if(!submission){
             return next(new ApiError(500, "Error while saving the submission."))
         }
