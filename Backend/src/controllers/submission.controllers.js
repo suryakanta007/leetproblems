@@ -51,6 +51,7 @@ const getSubmissionForProblem = asyncHandler(async (req,res,next)=>{
 })
 
 const getTotalSubmissionForProblem = asyncHandler(async (req,res,next)=>{
+    // Take problem id .
     const {problemId} = req.params;
     try {
         const submissionCount = await db.submission.count({
@@ -67,6 +68,11 @@ const getTotalSubmissionForProblem = asyncHandler(async (req,res,next)=>{
     } catch (error) {
         return next(new ApiError(500,error,"Error while counting all submission of user for this problem."))
     } 
+
+
+
+
+
 })
 
 
