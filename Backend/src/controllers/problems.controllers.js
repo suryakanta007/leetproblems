@@ -196,7 +196,29 @@ const deleteProblem = asyncHandler(async (req, res, next) => {
 });
 
 const getAllSolvedProblemsByUser = asyncHandler(async (req, res, next) => {
+    const userId = req.user.id;
 
+    const solvedProblems = await db.problem.findMany({
+        where:{
+            solvedBy:{
+                some:{
+                    userId:userId
+                }
+            }
+        },
+        include:{
+            solvedBy:{
+                where:{
+                    userId:userId
+                }
+            }
+        }
+    })
+
+    if(!solvedProblems){
+        return next(404,"No solved problem found.");
+    }
+    return res.status(200).json(new ApiResponse(200,solvedProblems,"Solved problems are featched successfully."))
 });
 
 
