@@ -3,7 +3,7 @@ import userRoutes from "./routes/auth.routes.js"
 import problemRoutes from "./routes/problem.routes.js"
 import executionRoutes from "./routes/execution-code.routes.js"
 import submissionRoutes from "./routes/submission.routes.js";
-import playlistRoutes from "./routes/palylis.routes.js";
+import playlistRoutes from "./routes/palylist.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import cookieParser from "cookie-parser"
 const app = express();

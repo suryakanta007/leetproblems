@@ -33,6 +33,33 @@ const getAllListDetails =asyncHandler(async(req,res,next)=>{
 })
 
 const getPlayListDetails = asyncHandler(async(req,res,next)=>{
+    const {playlistId} = req.params;
+    const userId = req.user.id;
+    try {
+        const playlistDetails = await db.playlist.findUnique({
+            where:{
+                id:playlistId,
+                userId
+            },
+            include:{
+                problems:{
+                    include:{
+                        problem:true
+                    }
+                }
+            }
+        })
+
+        if(!playlistDetails){
+            return next(new ApiError(400,"Not found playlist details."))
+        }
+
+        return res.status(200).json(new ApiResponse(200,playlistDetails,"All the playlist details feached."))
+
+    } catch (error) {
+        return next(new ApiError(500,error,"Error while geting playlist details."))
+    }
+
 })
 
 const createPlaylist = asyncHandler(async(req,res,next)=>{
@@ -44,12 +71,14 @@ const createPlaylist = asyncHandler(async(req,res,next)=>{
         if(!name||!description){
             return next(new ApiError(402,"Name and description is mandotory."))
         }
+        
         const isPresent = await db.playlist.findUnique({
             where:{
                 name,
                 description
             }
         })
+        
         if(!isPresent){
             return next(new ApiError(402,"Playlist is already created."))
         }
@@ -72,7 +101,25 @@ const createPlaylist = asyncHandler(async(req,res,next)=>{
 })
 
 const addProblemToPlaylist = asyncHandler(async(req,res,next)=>{
-    
+    const {playlistId} = req.params;
+    const {problemIds} = req.body;
+    try {
+        if(Array.isArray(problemIds)||problemIds.lenght===0){
+            return next(new ApiError(402,"Invalid or missing problems."))
+        }
+        const newProblemsInPlaylist = await db.problemInPlaylist.createMany({
+            data:problemIds.map((problemId)=>({
+                playlistId,
+                problemId
+            }))
+        })
+        if(!newProblemsInPlaylist){
+            return next(new ApiError(500,"Problems are not able to add in the playlist."))
+        }
+        return res.status(200).json(new ApiResponse(200,))        
+    } catch (error) {
+        return next(new ApiError(500,error,"Error while adding problem in playlist."))
+    }
 })  
 
 const deletePlaylist = asyncHandler(async(req,res,next)=>{

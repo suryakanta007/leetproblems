@@ -6,7 +6,7 @@ const router  = Router();
 
 router.route("/").get(authMiddleware,getAllListDetails)
 router.route("/:playlistId").get(authMiddleware,getPlayListDetails)
-router.route("/create-playlis").post(authMiddleware,createPlaylist)
+router.route("/create-playlist").post(authMiddleware,createPlaylist)
 router.route("/:playlistId/add-Problem").post(authMiddleware,addProblemToPlaylist);
 router.route("/playlistId").delete(authMiddleware,deletePlaylist);
 router.route("/:playlistId/delete-problem").delete(authMiddleware,removeProblemFromPlaylist);
