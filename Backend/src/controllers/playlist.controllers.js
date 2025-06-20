@@ -106,20 +106,24 @@ const createPlaylist = asyncHandler(async (req, res, next) => {
 })
 
 const addProblemToPlaylist = asyncHandler(async (req, res, next) => {
-    const { playlistId } = req.params;
+    const { playListId } = req.params;
     const { problemIds } = req.body;
     try {
-        if (Array.isArray(problemIds) || problemIds.lenght === 0) {
+        
+       
+        
+        if (!Array.isArray(problemIds) || problemIds.length === 0) {
             return next(new ApiError(402, "Invalid or missing problems."))
         }
+
         const newProblemsInPlaylist = await db.problemInPlaylist.createMany({
             data: problemIds.map((problemId) => ({
-                playlistId,
+                playListId,
                 problemId
             }))
         })
         if (!newProblemsInPlaylist) {
-            return next(new ApiError(500, "Problems are not able to add in the playlist."))
+            return next(new ApiError(500,newProblemsInPlaylist,"Problems are not able to add in the playlist."))
         }
         return res.status(200).json(new ApiResponse(200,))
     } catch (error) {
@@ -128,11 +132,56 @@ const addProblemToPlaylist = asyncHandler(async (req, res, next) => {
 })
 
 const deletePlaylist = asyncHandler(async (req, res, next) => {
+    const {playListId} = req.params;
+    try {
+        const isPresent = await db.palylist.findUnique({
+            where:{
+                id:playListId
+            }
+        })
 
+        if(!isPresent){
+            return next(new ApiError(404,"This playlist is not exist."))
+        }
+
+        const deletedPlayList = await db.playlist.delete({
+            where:{
+                id:playListId
+            }
+        })
+        if(!deletedPlayList){
+            return next(new ApiError(500,"Playlist is not delete from the database."))
+        }
+        return res.status(200).json(new ApiResponse(200,deletePlaylist,"Delete the playlist is Sucessfully."));
+    } catch (error) {
+        return next(new ApiError(500, error, "Error while deleting playlist."))
+    }
 })
 
 const removeProblemFromPlaylist = asyncHandler(async (req, res, next) => {
+    const {playListId} = req.params;
+    const {problemIds} = req.body;
+    try {
+        if (!Array.isArray(problemIds) || problemIds.length === 0) {
+            return next(new ApiError(402, "Invalid or missing problems."))
+        }
 
+        const deletedProblems = await db.problemInPlaylist.deleteMany({
+            where:{
+                playListId,
+                problemId:{
+                    in:problemIds
+                }
+            }
+        })
+
+        if(!deletePlaylist){
+            return next(new ApiError(500,"No problem is deleted from the playlist."))
+        }
+        return res.status(200).json(new ApiResponse(200,deletePlaylist,"Problems deleted from the playlist successfully."))
+    } catch (error) {
+        return next(new ApiError(500, error, "Error while deleting problem from playlist."))
+    }
 })
 
 
