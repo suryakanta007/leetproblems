@@ -123,9 +123,9 @@ const addProblemToPlaylist = asyncHandler(async (req, res, next) => {
             }))
         })
         if (!newProblemsInPlaylist) {
-            return next(new ApiError(500,newProblemsInPlaylist,"Problems are not able to add in the playlist."))
+            return next(new ApiError(500,"Problems are not able to add in the playlist."))
         }
-        return res.status(200).json(new ApiResponse(200,))
+        return res.status(200).json(new ApiResponse(200,newProblemsInPlaylist,"added problems in playlist"))
     } catch (error) {
         return next(new ApiError(500, error, "Error while adding problem in playlist."))
     }
@@ -134,15 +134,19 @@ const addProblemToPlaylist = asyncHandler(async (req, res, next) => {
 const deletePlaylist = asyncHandler(async (req, res, next) => {
     const {playListId} = req.params;
     try {
-        const isPresent = await db.palylist.findUnique({
+        
+        const isPresent = await db.playlist.findUnique({
             where:{
                 id:playListId
             }
         })
-
+        console.log("Ok : ",isPresent);
         if(!isPresent){
             return next(new ApiError(404,"This playlist is not exist."))
         }
+
+       
+        
 
         const deletedPlayList = await db.playlist.delete({
             where:{
@@ -152,7 +156,7 @@ const deletePlaylist = asyncHandler(async (req, res, next) => {
         if(!deletedPlayList){
             return next(new ApiError(500,"Playlist is not delete from the database."))
         }
-        return res.status(200).json(new ApiResponse(200,deletePlaylist,"Delete the playlist is Sucessfully."));
+        return res.status(200).json(new ApiResponse(200,deletedPlayList,"Delete the playlist is Sucessfully."));
     } catch (error) {
         return next(new ApiError(500, error, "Error while deleting playlist."))
     }
@@ -174,11 +178,10 @@ const removeProblemFromPlaylist = asyncHandler(async (req, res, next) => {
                 }
             }
         })
-
-        if(!deletePlaylist){
+        if(!deletedProblems){
             return next(new ApiError(500,"No problem is deleted from the playlist."))
         }
-        return res.status(200).json(new ApiResponse(200,deletePlaylist,"Problems deleted from the playlist successfully."))
+        return res.status(200).json(new ApiResponse(200,deletedProblems,"Problems deleted from the playlist successfully."))
     } catch (error) {
         return next(new ApiError(500, error, "Error while deleting problem from playlist."))
     }
