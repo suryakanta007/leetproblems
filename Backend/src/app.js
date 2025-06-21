@@ -6,11 +6,18 @@ import submissionRoutes from "./routes/submission.routes.js";
 import playlistRoutes from "./routes/palylist.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import cookieParser from "cookie-parser"
+import cors from "cors";
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use( 
+    cors({
+        origin:'http://localhost:5173',
+        credentials:true
+    })
+)
 
 app.get("/",(req,res)=>{
     res.send("Hello , Wellcome to LeetLab.❤️‍🔥")

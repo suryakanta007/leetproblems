@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '../store/useAuthStore'
 import {
   Code,
   Eye,
@@ -15,6 +16,7 @@ import AuthImagePattern from '../components/AuthImagePattern'
 const LogInPage = () => {
   const [showPassword, setShowPassword] = useState();
   const [loading, setLoading] = useState(false);
+  const { login, isLoggingIn } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -23,8 +25,15 @@ const LogInPage = () => {
     resolver: zodResolver(LoginSchema)
   })
 
-  const onSubmit = async(data)=>{
-    console.log(data)
+  const onSubmit = async (data) => {
+    try {
+      await login(data);
+      console.log("Login data : ", data);
+
+    } catch (error) {
+      console.log("Login Error :", error);
+
+    }
   }
 
   return (
@@ -58,9 +67,8 @@ const LogInPage = () => {
                 <input
                   type="email"
                   {...register("email")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
-                  }`}
+                  className={`input input-bordered w-full pl-10 ${errors.email ? "input-error" : ""
+                    }`}
                   placeholder="you@example.com"
                 />
               </div>
@@ -81,9 +89,8 @@ const LogInPage = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
-                  }`}
+                  className={`input input-bordered w-full pl-10 ${errors.password ? "input-error" : ""
+                    }`}
                   placeholder="••••••••"
                 />
                 <button
@@ -107,8 +114,16 @@ const LogInPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
+              disabled={isLoggingIn}
             >
-              Login
+              {
+                isLoggingIn ? (
+                  <>
+                    <Loader2 className='h-5 w-5 animate-spin' />
+                    Loading..
+                  </>
+                ):("Sign in")
+            }
             </button>
           </form>
 
