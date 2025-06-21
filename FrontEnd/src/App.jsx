@@ -5,21 +5,24 @@ import SignupPage from './pages/SignupPage'
 import HomePage from './pages/HomePage'
 
 const App = () => {
+
+  let authUser = null;
+
   return (
    <>
     <div className='flex flex-col items-center justify-center'>
     <Routes>
       <Route
       path='/login'
-      element={<LoginPage/>}
+      element={!authUser?<LoginPage/>:<Navigate to={"/"}/>}
       />
       <Route
-      path='signup'
-      element={<SignupPage/>}
+      path='/signup'
+      element={!authUser?<SignupPage/>:<Navigate to={"/"}/>}
       />
       <Route
       path='/'
-      element={<HomePage/>}
+      element={authUser?<HomePage/>:<Navigate to={"/login"}/>}
       />
     </Routes>
     </div>
