@@ -12,9 +12,11 @@ import {
 } from 'lucide-react'
 import { SignUpSchema } from '../zodSchema/signupSchema'
 import AuthImagePattern from '../components/AuthImagePattern'
+import { useAuthStore } from '../store/useAuthStore'
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState();
   const [loading, setLoading] = useState(false);
+  const { signUp, isSigninUp } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -23,8 +25,14 @@ const SignupPage = () => {
     resolver: zodResolver(SignUpSchema)
   })
 
-  const onSubmit = async(data)=>{
-    console.log(data)
+
+  const onSubmit = async (data) => {
+    try {
+      await signUp(data);
+      console.log("Signup data : ", data)
+    } catch (error) {
+      console.log("Signup failed :", error)
+    }
   }
 
   return (
@@ -38,14 +46,14 @@ const SignupPage = () => {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <Code className="w-6 h-6 text-primary" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
+              <h1 className="text-2xl font-bold mt-2">Welcome</h1>
               <p className="text-base-content/60">Sign in to your account</p>
             </div>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            
+
             {/* name */}
             <div className="form-control">
               <label className="label">
@@ -58,15 +66,14 @@ const SignupPage = () => {
                 <input
                   type="text"
                   {...register("name")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.name ? "input-error" : ""
-                  }`}
+                  className={`input input-bordered w-full pl-10 ${errors.name ? "input-error" : ""
+                    }`}
                   placeholder="John Doe"
                 />
               </div>
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-              )}              
+              )}
             </div>
 
             {/* Email */}
@@ -81,9 +88,8 @@ const SignupPage = () => {
                 <input
                   type="email"
                   {...register("email")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
-                  }`}
+                  className={`input input-bordered w-full pl-10 ${errors.email ? "input-error" : ""
+                    }`}
                   placeholder="you@example.com"
                 />
               </div>
@@ -104,9 +110,8 @@ const SignupPage = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
-                  }`}
+                  className={`input input-bordered w-full pl-10 ${errors.password ? "input-error" : ""
+                    }`}
                   placeholder="••••••••"
                 />
                 <button
@@ -130,8 +135,16 @@ const SignupPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
+              disabled={isSigninUp}
             >
-              Signup
+              {
+                isSigninUp ? (
+                  <>
+                    <Loader2 className='h-5 w-5 animate-spin' />
+                    Loading..
+                  </>
+                ) : ("Sign up")
+              }
             </button>
           </form>
 
