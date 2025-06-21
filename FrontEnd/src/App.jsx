@@ -3,6 +3,7 @@ import { Routes,Route,Navigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import HomePage from './pages/HomePage'
+import {Toaster} from 'react-hot-toast'
 
 const App = () => {
 
@@ -11,6 +12,7 @@ const App = () => {
   return (
    <>
     <div className='flex flex-col items-center justify-center'>
+    <Toaster/>
     <Routes>
       <Route
       path='/login'
