@@ -8,14 +8,17 @@ import { db } from "../db/db.js";
 
 const createProblem = asyncHandler(async (req, res, next) => {
     // Going to get all the data from the req.body
-    const { title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution } = req.body;
+    console.log("Body : ", req.body)
+    const { title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolutions } = req.body;
 
     if (req.user.role !== UserRole.ADMIN) {
         return next(new ApiError(403, "You are not authorized to perform this action."))
     }
-
+    
     try {
-        for (const [language, solutionCode] of Object.entries(referenceSolution)) {
+        console.log("Reference Solution : ", referenceSolutions)
+        for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
+            
             console.log("Loop running count :",)
             const languageId = getJudge0LanguageId(language);
 
@@ -56,7 +59,7 @@ const createProblem = asyncHandler(async (req, res, next) => {
         // Save the problem to the database .
         const newProblem = await db.problem.create({
             data: {
-                title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution,
+                title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution:referenceSolutions,
                 userId: req.user.id,
             }
         })
@@ -68,6 +71,7 @@ const createProblem = asyncHandler(async (req, res, next) => {
         return res.status(201).json(new ApiResponse(201, newProblem, "new Problem is created succesfully."))
 
     } catch (error) {
+        console.log(error)
         return next(new ApiError(500, error, "error while creating the problem."))
     }
 })
@@ -108,7 +112,7 @@ const getProblemById = asyncHandler(async (req, res, next) => {
 
 const updateProblem = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const { title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution } = req.body;
+    const { title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolutions } = req.body;
     try {
         const isProblemExsit = await db.problem.findUnique({
             where: {
@@ -118,7 +122,7 @@ const updateProblem = asyncHandler(async (req, res, next) => {
         if (!isProblemExsit) {
             return next(new ApiError(404, "Problem is Not exist."));
         }
-        for (const [language, solutionCode] of Object.entries(referenceSolution)) {
+        for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
             const languageId = getJudge0LanguageId(language);
 
             if (!languageId) {
@@ -154,7 +158,7 @@ const updateProblem = asyncHandler(async (req, res, next) => {
                 id
             },
             data: {
-                title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolution,userId:req.user.id
+                title, description, defficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolutions,userId:req.user.id
             }
         })
 

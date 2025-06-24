@@ -522,7 +522,20 @@ const CreateProblemForm = () => {
 
 
     const onSubmit = async (value) => {
-        console.log(value)
+        try {
+            setIsLoading(true);
+            console.log("Form Data : ", value)
+            const res = await axiosInstance.post("/problems/create-problem",value);
+            console.log("Response : ", res)
+            toast.success(res.data.message||"Problem Created Successfully.");
+            navigation("/problems");
+        } catch (error) {
+            console.log("Error creating problem", error);
+            toast.error("Error creating problem");
+        }
+        finally{
+            setIsLoading(false);
+        }
     }
 
     const loadSampleData = () => {
