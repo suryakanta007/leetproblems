@@ -6,7 +6,7 @@ import {Bookmark,PencilIcon,Trash,TrashIcon,Plus} from "lucide-react"
 
 
 const ProblemTable = ({problems}) => {
-
+  // All states for this component
     const {authUser} = useAuthStore();
     const [search,setSearch] = useState("");
 
@@ -71,5 +71,7 @@ const ProblemTable = ({problems}) => {
     </div>
   )
 }
+
+
 
 export default ProblemTable
