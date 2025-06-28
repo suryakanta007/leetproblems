@@ -6,7 +6,7 @@ import {Bookmark,PencilIcon,Trash,TrashIcon,Plus} from "lucide-react"
 
 
 const ProblemTable = ({problems}) => {
-  // All states for this component
+  // All states for this component and no update for tody.
     const {authUser} = useAuthStore();
     const [search,setSearch] = useState("");
 
