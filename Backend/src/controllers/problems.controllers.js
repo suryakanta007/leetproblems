@@ -78,7 +78,13 @@ const createProblem = asyncHandler(async (req, res, next) => {
 
 const getAllProblems = asyncHandler(async (req, res, next) => {
     try {
-        const problems = await db.problem.findMany();
+        const problems = await db.problem.findMany({
+            include:{
+                solvedBy:{
+                    where:{userId : req.user.id}
+                }
+            }
+        });
         if (!problems) {
             return next(new ApiError(500, "Problem is not able to fetch from the database."))
         }
