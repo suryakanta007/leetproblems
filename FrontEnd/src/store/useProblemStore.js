@@ -28,12 +28,11 @@ export const  useProblemStore  = create((set)=>({
             set({isProblemsLoading:true})
             const res = await axiosInstance.get(`/problems/get-problem/${id}`)
             set({problem:res.data.data})
+            set({isProblemLoading:false})
         } catch (error) {
             console.log("Erro in getProblemById ",error);
             toast.error("Error in getProblemById .")
             
-        }finally{
-            set({isProblemsLoading:false})
         }
     },
 
