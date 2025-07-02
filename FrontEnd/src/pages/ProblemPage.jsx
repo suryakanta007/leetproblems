@@ -21,6 +21,7 @@ import {
 import { useProblemStore } from '../store/useProblemStore';
 import { useExecutionStore } from '../store/useExeucutionStore';
 import { getLanguageId } from '../lib/lang';
+import SubmissionResults from '../components/Submission';
 
 const ProblemPage = () => {
   const submissionCount = 10
@@ -318,7 +319,7 @@ const ProblemPage = () => {
         <div className='card bg-base-100 shadow-xl mt-6'>
           <div className='card-body'>
             {
-              submission ? (<h1>Submission Data</h1>) : (
+              submission ? <SubmissionResults submission={submission} /> : (
                 <>
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-bold">Test Cases</h3>
