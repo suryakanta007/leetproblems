@@ -27,7 +27,7 @@ const CreatePlaylistModal = ({isOpen,onClose,onSubmit}) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(handleFromSubmit)} className="p-6 space-y-4">
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium">Playlist Name</span>

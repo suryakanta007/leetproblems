@@ -1,8 +1,11 @@
 import React, { useState, useMemo } from 'react'
 import { useAuthStore } from "../store/useAuthStore"
-import { Link } from 'react-router-dom'
+import { data, Link } from 'react-router-dom'
 import { Bookmark, PencilIcon, Trash, TrashIcon, Plus, Loader2 } from "lucide-react"
 import { useActions } from '../store/useAction'
+import { usePlaylistStore } from '../store/usePlaylistStore'
+import AddToPlaylist from './AddToPlaylist'
+import CreatePlaylistModal from './CreatePlaylistModal'
 
 
 
@@ -15,7 +18,12 @@ const ProblemTable = ({ problems }) => {
   const [difficulty, setDifficulty] = useState("ALL");
   const [selectedTag, setSelectedTag] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCreateModalOpen,setIsCreateModalOpen] = useState(false);
+  const [isAddToPlaylistModalOpen,setIsAddToPlaylistModalOpen] = useState(false);
+  const [selectedProblemId, setSelectedProblemId] = useState(null);
   const difficulties = ["EASY", "MEDIUM", "HARD"];
+
+  const {createPlaylist} = usePlaylistStore();
 
   const {isDeletingProblem,onDeleteProblem} = useActions();
 
@@ -41,8 +49,13 @@ const ProblemTable = ({ problems }) => {
     return filterProblems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
   }, [filterProblems, currentPage])
 
-  const handleAddToPlaylist = (id) => {
-    console.log("ADD to playlist.")
+  const handleAddToPlaylist = (problemId) => {
+   setSelectedProblemId(problemId);
+   setIsAddToPlaylistModalOpen(true);
+  }
+
+  const handleCreatePlaylist = async (data)=>{
+    await createPlaylist(data)
   }
 
   const handleDelete = (id) => {
@@ -56,7 +69,7 @@ const ProblemTable = ({ problems }) => {
         <h2 className="text-2xl font-bold">Problems</h2>
         <button
           className="btn btn-primary gap-2"
-          onClick={() => { }}
+          onClick={() => { setIsCreateModalOpen(true)}}
         >
           <Plus className="w-4 h-4" />
           Create Playlist
@@ -209,7 +222,17 @@ const ProblemTable = ({ problems }) => {
         onClick={() => { setCurrentPage((prev) => prev + 1) }}
         >Next</button>
       </div>
+           <CreatePlaylistModal 
+          isOpen={isCreateModalOpen}
+          onClose={()=>setIsCreateModalOpen(false)}
+          onSubmit={handleCreatePlaylist}
+           />
 
+           <AddToPlaylist
+           isOpen={isAddToPlaylistModalOpen}
+           onClose={()=>setIsAddToPlaylistModalOpen(false)}
+           problemId={selectedProblemId}
+           />
     </div>
   )
 }

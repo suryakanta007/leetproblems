@@ -2,7 +2,7 @@ import {create} from 'zustand'
 import {axiosInstance} from '../lib/axios.js'
 import toast from 'react-hot-toast'
 
-export const usePlaylistStore = create(()=>({
+export const usePlaylistStore = create((set,get)=>({
     playlists:[],
     currentPlaylist:null,
     isLoading:false,
@@ -68,6 +68,7 @@ export const usePlaylistStore = create(()=>({
           toast.success("Problem added to playlist");
     
           // Refresh the playlist details
+          console.log(get())
           if (get().currentPlaylist?.id === playlistId) {
             await get().getPlaylistDetails(playlistId);
           }
