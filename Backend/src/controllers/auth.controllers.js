@@ -91,6 +91,8 @@ const logout = asyncHandler(async (req, res, next) => {
 
 })
 
+const resetPassword = asyncHandler(async (req, res, next) => {})
+
 const profile = asyncHandler(async (req, res, next) => {
         return res.status(200).json(new ApiResponse(200,req.user,"User Authenticated Successfully."))
 })  
